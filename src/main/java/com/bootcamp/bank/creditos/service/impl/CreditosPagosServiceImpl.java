@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 @Service
 @Log4j2
@@ -49,7 +49,7 @@ public class CreditosPagosServiceImpl implements CreditosPagosService {
 
     }
 
-    Function<PagoDao,PagoDao> pagoAsignarValores = pago -> {
+    UnaryOperator<PagoDao> pagoAsignarValores = pago -> {
         LocalDateTime fecha = LocalDateTime.now();
         pago.setFechaPago(fecha);
         pago.setFechaPagoT(Util.getCurrentDateAsString("dd/MM/yyyy"));
