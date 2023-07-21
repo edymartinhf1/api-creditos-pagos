@@ -81,6 +81,17 @@ public class CreditoProductoPagoController {
     }
 
 
+    @GetMapping("/movimiento/cliente/{idCliente}/credito/{numeroTarjetaCredito}")
+    public Flux<Pago> findMovsByIdClienteAndNumeroTarjetaCredito(
+            @PathVariable(name = "idCliente") String idCliente,
+            @PathVariable(name = "numeroTarjetaCredito") String numeroTarjetaCredito
+    ) {
+        log.info("peticion idCliente:"+idCliente+" numeroTarjetaCredito:"+numeroTarjetaCredito);
+        return creditosPagosService.findMovsByIdClienteAndNumeroTarjetaCredito(idCliente,numeroTarjetaCredito)
+                .map(this::fromPagoDaoToPagoDto);
+
+    }
+
     private Pago fromPagoDaoToPagoDto(PagoDao pagoDao) {
         Pago pago = new Pago();
         BeanUtils.copyProperties(pagoDao,pago);

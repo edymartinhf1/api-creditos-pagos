@@ -1,5 +1,7 @@
 package com.bootcamp.bank.creditos.service.impl;
 
+import com.bootcamp.bank.creditos.clients.ClientApiClientes;
+import com.bootcamp.bank.creditos.clients.ClientApiCreditos;
 import com.bootcamp.bank.creditos.model.dao.PagoDao;
 import com.bootcamp.bank.creditos.model.dao.repository.CreditoProductoPagoRepository;
 import com.bootcamp.bank.creditos.service.CreditosPagosService;
@@ -11,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.function.UnaryOperator;
 
 @Service
@@ -20,10 +23,18 @@ public class CreditosPagosServiceImpl implements CreditosPagosService {
 
     private final CreditoProductoPagoRepository creditoProductoPagoRepository;
 
+    private final ClientApiClientes clientApiClientes;
+
+    private final ClientApiCreditos clientApiCreditos;
+
     @Override
     public Mono<PagoDao> save(PagoDao pagoDao) {
-        pagoDao = pagoAsignarValores.apply(pagoDao);
-        return creditoProductoPagoRepository.save(pagoDao);
+        return clientApiClientes.getClientes(pagoDao.getIdCliente())
+                .flatMap(cliente->{
+                    PagoDao pagoDaoFinal = pagoAsignarValores.apply(pagoDao);
+                    return creditoProductoPagoRepository.save(pagoDaoFinal);
+                });
+
     }
 
     @Override
@@ -47,6 +58,12 @@ public class CreditosPagosServiceImpl implements CreditosPagosService {
         LocalDateTime fecFinal = Util.getLocalDatefromString(fechaFinal);
         return creditoProductoPagoRepository.findByNumeroCreditoAndFechaPagoBetween(numeroCredito,fecInicial,fecFinal);
 
+    }
+
+    @Override
+    public Flux<PagoDao> findMovsByIdClienteAndNumeroTarjetaCredito(String idCliente, String numeroTarjetaCredito) {
+        return creditoProductoPagoRepository.findByIdClienteAndNumeroTarjetaCredito(idCliente,numeroTarjetaCredito)
+                .sort(Comparator.comparing(PagoDao::getFechaPago));
     }
 
     UnaryOperator<PagoDao> pagoAsignarValores = pago -> {

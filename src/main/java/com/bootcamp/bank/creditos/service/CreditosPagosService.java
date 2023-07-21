@@ -11,4 +11,6 @@ public interface CreditosPagosService {
     Flux<PagoDao> findByNumeroCredito(String numeroCredito);
     Flux<PagoDao> findPagosByNumeroCreditoAndBetweenDates(String numeroCredito,String fechaInicial,String fechaFinal);
 
+    Flux<PagoDao> findMovsByIdClienteAndNumeroTarjetaCredito(String idCliente,String numeroTarjetaCredito);
+
 }

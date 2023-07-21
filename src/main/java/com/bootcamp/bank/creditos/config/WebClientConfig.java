@@ -15,4 +15,9 @@ public class WebClientConfig {
     public WebClient webClientCuentas() {
         return WebClient.create("http://localhost:8083");
     }
+
+    @Bean(name = "clientCreditos")
+    public WebClient webClientCreditos() {
+        return WebClient.create("http://localhost:8082");
+    }
 }
