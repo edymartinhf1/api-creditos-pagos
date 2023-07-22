@@ -67,6 +67,13 @@ public class CreditoProductoPagoController {
                 .map(this::fromPagoDaoToPagoDto);
     }
 
+    /**
+     * Permite consultar los pagos por numero de credito
+     * @param numeroCredito
+     * @param fechaInicial
+     * @param fechaFinal
+     * @return
+     */
     @GetMapping("/numerocredito/{numeroCredito}/fechainicio/{fechaInicial}/fechafin/{fechaFinal}")
     public Flux<Pago> findPagosByNumeroCreditoAndBetweenDates(
             @PathVariable(name = "numeroCredito") String numeroCredito,
@@ -81,6 +88,12 @@ public class CreditoProductoPagoController {
     }
 
 
+    /**
+     * Permite consultar los pagos de tarjeta credito por id cliente y numero de tarjeta de credito
+     * @param idCliente
+     * @param numeroTarjetaCredito
+     * @return
+     */
     @GetMapping("/movimiento/cliente/{idCliente}/credito/{numeroTarjetaCredito}")
     public Flux<Pago> findMovsByIdClienteAndNumeroTarjetaCredito(
             @PathVariable(name = "idCliente") String idCliente,
