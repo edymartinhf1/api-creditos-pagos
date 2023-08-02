@@ -59,7 +59,30 @@ class CreditosPagosServiceImplTest {
 
     @Test
     void findByIdCliente() {
+        PagoDao espero = new PagoDao();
+        espero.setId("1");
+        espero.setIdCliente("123456");
+        espero.setNumeroCredito("003-004545");;
+        espero.setNumeroTarjetaCredito("004-0056488");
 
+
+        PagoDao pago = new PagoDao();
+        pago.setId("1");
+        pago.setIdCliente("123456");
+        pago.setNumeroCredito("003-004545");;
+        pago.setNumeroTarjetaCredito("004-0056488");
+
+        Mockito.when( creditoProductoPagoRepository.findByIdCliente("123456") )
+                .thenReturn(Flux.just(pago));
+
+        Flux<PagoDao> pagos = creditoProductoPagoRepository.findByIdCliente("123456");
+
+        List<PagoDao> pagosList = pagos.collectList().block();
+        log.info("  "+pagosList.toString());
+        PagoDao pagoConsultado= pagosList.get(0);
+        Assertions.assertEquals(espero.getId(),pagoConsultado.getId());
+        Assertions.assertEquals(espero.getNumeroTarjetaCredito(),pagoConsultado.getNumeroTarjetaCredito());
+        Assertions.assertEquals(espero.getNumeroCredito(),pagoConsultado.getNumeroCredito());
 
     }
 
